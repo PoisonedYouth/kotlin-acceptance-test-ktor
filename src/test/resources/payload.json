@@ -1,0 +1,23 @@
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "birthdate": "10.05.2001",
+  "email": "john.doe@mail.com",
+  "address": {
+    "street": "Main Street",
+    "number": "13",
+    "zipCode": "90001",
+    "city": "Los Angeles",
+    "country": "US"
+  },
+  "accounts": [
+    {
+      "number": "1234",
+      "balance": "200"
+    },
+    {
+      "number": "12345",
+      "balance": "-150"
+    }
+  ]
+}
