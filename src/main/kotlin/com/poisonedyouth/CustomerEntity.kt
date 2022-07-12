@@ -2,25 +2,24 @@ package com.poisonedyouth
 
 import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
-import org.jetbrains.exposed.dao.flushCache
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class Customer(id: EntityID<Long>) : LongEntity(id) {
-    companion object : LongEntityClass<Customer>(CustomerTable) {
-        override fun findById(id: EntityID<Long>): Customer? = transaction {
+class CustomerEntity(id: EntityID<Long>) : LongEntity(id) {
+    companion object : LongEntityClass<CustomerEntity>(CustomerTable) {
+        override fun findById(id: EntityID<Long>): CustomerEntity? = transaction {
             super.findById(id)
         }
 
-        fun deleteCustomer(customer: Customer) = transaction {
-            AccountTable.deleteWhere{AccountTable.customer eq customer.id}
-            CustomerTable.deleteWhere { CustomerTable.id eq customer.id }
+        fun deleteCustomer(customerEntity: CustomerEntity) = transaction {
+            AccountTable.deleteWhere{AccountTable.customer eq customerEntity.id}
+            CustomerTable.deleteWhere { CustomerTable.id eq customerEntity.id }
         }
 
-        override fun new(id: Long?, init: Customer.() -> Unit): Customer = transaction{
+        override fun new(id: Long?, init: CustomerEntity.() -> Unit): CustomerEntity = transaction{
             super.new(id, init)
         }
     }
@@ -29,14 +28,14 @@ class Customer(id: EntityID<Long>) : LongEntity(id) {
     var lastName by CustomerTable.lastName
     var birthDate by CustomerTable.birthDate
     var email by CustomerTable.email
-    var address by Address referencedOn CustomerTable.address
-    val accounts by Account referrersOn AccountTable.customer
+    var addressEntity by AddressEntity referencedOn CustomerTable.address
+    val accounts by AccountEntity referrersOn AccountTable.customer
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Customer
+        other as CustomerEntity
 
         if (id != other.id) return false
         if (firstName != other.firstName) return false

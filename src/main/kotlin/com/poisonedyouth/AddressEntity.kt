@@ -7,21 +7,22 @@ import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.SizedIterable
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class Address(id: EntityID<Long>) : LongEntity(id) {
-    companion object : LongEntityClass<Address>(AddressTable) {
+
+class AddressEntity(id: EntityID<Long>) : LongEntity(id) {
+    companion object : LongEntityClass<AddressEntity>(AddressTable) {
         fun findAddressesByZipCode(zipCode: Int) = transaction {
-            Address.find { AddressTable.zipCode eq zipCode }.singleOrNull()
+            AddressEntity.find { AddressTable.zipCode eq zipCode }.singleOrNull()
         }
 
-        override fun all(): SizedIterable<Address> = transaction{
+        override fun all(): SizedIterable<AddressEntity> = transaction {
             super.all()
         }
 
-        override fun findById(id: EntityID<Long>): Address? = transaction{
+        override fun findById(id: EntityID<Long>): AddressEntity? = transaction {
             super.findById(id)
         }
 
-        override fun new(id: Long?, init: Address.() -> Unit): Address = transaction{
+        override fun new(id: Long?, init: AddressEntity.() -> Unit): AddressEntity = transaction {
             super.new(id, init)
         }
     }
@@ -36,7 +37,7 @@ class Address(id: EntityID<Long>) : LongEntity(id) {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Address
+        other as AddressEntity
 
         if (id != other.id) return false
         if (street != other.street) return false

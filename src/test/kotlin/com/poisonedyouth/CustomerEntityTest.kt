@@ -6,8 +6,6 @@ import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.DatabaseConfig
-import org.jetbrains.exposed.sql.DatabaseConfig.Companion
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
@@ -16,7 +14,7 @@ import org.junit.jupiter.api.TestInstance
 import java.time.LocalDate
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class CustomerTest {
+internal class CustomerEntityTest {
 
     @BeforeEach
     fun setupDatasource() {
@@ -40,7 +38,7 @@ internal class CustomerTest {
     @Test
     fun `save Customer is possible`() {
         // given
-        val addressNew = Address.new {
+        val addressEntityNew = AddressEntity.new {
             street = "Main Street"
             number = "13"
             zipCode = 90001
@@ -50,34 +48,34 @@ internal class CustomerTest {
 
 
         // when
-        val customerNew = Customer.new {
+        val customerEntityNew = CustomerEntity.new {
             firstName = "John"
             lastName = "Doe"
             birthDate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
-            address = addressNew
+            addressEntity = addressEntityNew
         }
-        Account.new {
+        AccountEntity.new {
             number = 12345
             balance = 200
-            customer = customerNew
+            customerEntity = customerEntityNew
         }
-        Account.new {
+        AccountEntity.new {
             number = 12346
             balance = -150
-            customer = customerNew
+            customerEntity = customerEntityNew
         }
 
         // then
-        assertThat(Customer.findById(customerNew.id)).isEqualTo(customerNew)
+        assertThat(CustomerEntity.findById(customerEntityNew.id)).isEqualTo(customerEntityNew)
     }
 
     @Test
     fun `delete Customer is possible`() {
         // given
         transaction {
-            val addressNew =
-                Address.new {
+            val addressEntityNew =
+                AddressEntity.new {
                     street = "Main Street"
                     number = "13"
                     zipCode = 90001
@@ -85,39 +83,39 @@ internal class CustomerTest {
                     country = "US"
                 }
 
-            val customerNew = Customer.new {
+            val customerEntityNew = CustomerEntity.new {
                 firstName = "John"
                 lastName = "Doe"
                 birthDate = LocalDate.of(2001, 5, 10)
                 email = "john.doe@mail.com"
-                address = addressNew
+                addressEntity = addressEntityNew
             }
 
-            val account = Account.new {
+            val accountEntity = AccountEntity.new {
                 number = 12345
                 balance = 200
-                customer = customerNew
+                customerEntity = customerEntityNew
             }
-            Account.new {
+            AccountEntity.new {
                 number = 12346
                 balance = -150
-                customer = customerNew
+                customerEntity = customerEntityNew
             }
 
             // when
-            Customer.deleteCustomer(customerNew)
+            CustomerEntity.deleteCustomer(customerEntityNew)
 
             // then
-            assertThat(Customer.findById(customerNew.id)).isNull()
-            assertThat(Account.findById(account.id)).isNull()
-            assertThat(Address.all()).isNotEmpty
+            assertThat(CustomerEntity.findById(customerEntityNew.id)).isNull()
+            assertThat(AccountEntity.findById(accountEntity.id)).isNull()
+            assertThat(AddressEntity.all()).isNotEmpty
         }
     }
 
     @Test
     fun `save Customer not allows duplicate email`() {
         // given
-        val addressNew = Address.new {
+        val addressEntityNew = AddressEntity.new {
             street = "Main Street"
             number = "13"
             zipCode = 90001
@@ -125,32 +123,32 @@ internal class CustomerTest {
             country = "US"
         }
 
-        val customerNew = Customer.new {
+        val customerEntityNew = CustomerEntity.new {
             firstName = "John"
             lastName = "Doe"
             birthDate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
-            address = addressNew
+            addressEntity = addressEntityNew
         }
-        Account.new {
+        AccountEntity.new {
             number = 12345
             balance = 200
-            customer = customerNew
+            customerEntity = customerEntityNew
         }
-        Account.new {
+        AccountEntity.new {
             number = 12346
             balance = -150
-            customer = customerNew
+            customerEntity = customerEntityNew
         }
 
         // when + then
         Assertions.assertThatThrownBy {
-            Customer.new {
+            CustomerEntity.new {
                 firstName = "Duplicate"
                 lastName = "Customer"
                 birthDate = LocalDate.of(1984, 12, 1)
                 email = "john.doe@mail.com"
-                address = addressNew
+                addressEntity = addressEntityNew
             }
 
         }.isInstanceOf(ExposedSQLException::class.java)

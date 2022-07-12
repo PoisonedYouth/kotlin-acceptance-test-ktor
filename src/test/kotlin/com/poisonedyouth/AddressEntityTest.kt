@@ -12,7 +12,7 @@ import org.junit.jupiter.api.TestInstance
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal class AddressTest {
+internal class AddressEntityTest {
 
 
     @BeforeEach
@@ -37,7 +37,7 @@ internal class AddressTest {
     @Test
     fun `save address is possible`() {
         // given + when
-        val actual = Address.new {
+        val actual = AddressEntity.new {
             street = "Main Street"
             number = "13"
             zipCode = 90001
@@ -47,13 +47,13 @@ internal class AddressTest {
 
 
         // then
-        assertThat(Address.findById(actual.id)).isEqualTo(actual)
+        assertThat(AddressEntity.findById(actual.id)).isEqualTo(actual)
     }
 
     @Test
     fun `findAddressesByZipCode returns matching address`() {
         // given
-        Address.new {
+        AddressEntity.new {
             street = "Main Street"
             number = "13"
             zipCode = 90001
@@ -62,7 +62,7 @@ internal class AddressTest {
         }
 
 
-        val address2 = Address.new {
+        val addressEntity2 = AddressEntity.new {
             street = "Hauptstrasse"
             number = "25A"
             zipCode = 10115
@@ -71,16 +71,16 @@ internal class AddressTest {
         }
 
         // when
-        val actual = Address.findAddressesByZipCode(10115)
+        val actual = AddressEntity.findAddressesByZipCode(10115)
 
         // then
-        assertThat(actual).isEqualTo(address2)
+        assertThat(actual).isEqualTo(addressEntity2)
     }
 
     @Test
     fun `findAddressesByCity returns empty optional for no matching address`() {
         // given
-        Address.new {
+        AddressEntity.new {
             street = "Main Street"
             number = "13"
             zipCode = 90001
@@ -88,7 +88,7 @@ internal class AddressTest {
             country = "US"
         }
 
-        Address.new {
+        AddressEntity.new {
             street = "Hauptstrasse"
             number = "25A"
             zipCode = 10115
@@ -97,7 +97,7 @@ internal class AddressTest {
         }
 
         // when
-        val actual = Address.findAddressesByZipCode(88888)
+        val actual = AddressEntity.findAddressesByZipCode(88888)
 
         // then
         assertThat(actual).isNull()

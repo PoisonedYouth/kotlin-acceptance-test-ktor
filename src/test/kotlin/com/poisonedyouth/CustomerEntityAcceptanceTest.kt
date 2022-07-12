@@ -12,7 +12,7 @@ import io.ktor.server.testing.testApplication
 import org.junit.Test
 import java.io.File
 
-class CustomerAcceptanceTest {
+class CustomerEntityAcceptanceTest {
 
     @Test
     fun `scenario save customer is successful`() = testApplication {
