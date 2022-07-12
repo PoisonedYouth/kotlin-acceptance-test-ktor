@@ -10,8 +10,10 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.server.testing.testApplication
 import org.junit.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import java.io.File
 
+@ExtendWith(CleanDatabaseExtension::class)
 class CustomerEntityAcceptanceTest {
 
     @Test

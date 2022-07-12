@@ -1,39 +1,16 @@
 package com.poisonedyouth
 
-import com.zaxxer.hikari.HikariConfig
-import com.zaxxer.hikari.HikariDataSource
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
+import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.exceptions.ExposedSQLException
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.ExtendWith
 import java.time.LocalDate
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(CleanDatabaseExtension::class)
 internal class CustomerEntityTest {
-
-    @BeforeEach
-    fun setupDatasource() {
-        val hikariConfig = HikariConfig().apply {
-            jdbcUrl = "jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"
-            driverClassName = "org.h2.Driver"
-            username = "root"
-            password = "password"
-            maximumPoolSize = 3
-            isAutoCommit = false
-            transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-            validate()
-        }
-        val database = Database.connect(HikariDataSource(hikariConfig))
-        transaction(database) {
-            SchemaUtils.drop(CustomerTable, AccountTable, AddressTable)
-            SchemaUtils.create(AccountTable, CustomerTable, AddressTable)
-        }
-    }
 
     @Test
     fun `save Customer is possible`() {
@@ -153,153 +130,131 @@ internal class CustomerEntityTest {
 
         }.isInstanceOf(ExposedSQLException::class.java)
     }
-//
-//    @Test
-//    fun `save Customer without saved address fails`() {
-//        // given
-//        val address = Address(
-//            street = "Main Street",
-//            number = "13",
-//            zipCode = 90001,
-//            city = "Los Angeles",
-//            country = "US"
-//        )
-//
-//        val customer = Customer(
-//            firstName = "John",
-//            lastName = "Doe",
-//            birthdate = LocalDate.of(2001, 5, 10),
-//            email = "john.doe@mail.com",
-//            address = address,
-//            accounts = setOf(
-//                Account(
-//                    number = 12345,
-//                    balance = 200
-//                ),
-//                Account(
-//                    number = 12346,
-//                    balance = -150
-//                )
-//            )
-//        )
-//
-//        // when + then
-//        Assertions.assertThatThrownBy {
-//            customerRepository.save(customer)
-//        }.isInstanceOf(InvalidDataAccessApiUsageException::class.java)
-//    }
-//
-//    @Test
-//    fun `findByFirstNameAndLastName returns matching customer`() {
-//        // given
-//        val address = Address(
-//            street = "Main Street",
-//            number = "13",
-//            zipCode = 90001,
-//            city = "Los Angeles",
-//            country = "US"
-//        )
-//        addressRepository.save(address)
-//
-//        val customer = Customer(
-//            firstName = "John",
-//            lastName = "Doe",
-//            birthdate = LocalDate.of(2001, 5, 10),
-//            email = "john.doe@mail.com",
-//            address = address,
-//            accounts = setOf(
-//                Account(
-//                    number = 12345,
-//                    balance = 200
-//                ),
-//                Account(
-//                    number = 12346,
-//                    balance = -150
-//                )
-//            )
-//        )
-//        customerRepository.save(customer)
-//
-//        // when
-//        val actual = customerRepository.findByFirstNameAndLastName("John", "Doe")
-//
-//        // then
-//        assertThat(actual.get()).isEqualTo(customer)
-//    }
-//
-//    @Test
-//    fun `existsCustomerByEmail returns true if customer exists`() {
-//        // given
-//        val address = Address(
-//            street = "Main Street",
-//            number = "13",
-//            zipCode = 90001,
-//            city = "Los Angeles",
-//            country = "US"
-//        )
-//        addressRepository.save(address)
-//
-//        val customer = Customer(
-//            firstName = "John",
-//            lastName = "Doe",
-//            birthdate = LocalDate.of(2001, 5, 10),
-//            email = "john.doe@mail.com",
-//            address = address,
-//            accounts = setOf(
-//                Account(
-//                    number = 12345,
-//                    balance = 200
-//                ),
-//                Account(
-//                    number = 12346,
-//                    balance = -150
-//                )
-//            )
-//        )
-//        customerRepository.save(customer)
-//
-//        // when
-//        val actual = customerRepository.existsCustomerByEmail(customer.email)
-//
-//        // then
-//        assertThat(actual).isTrue
-//    }
-//
-//    @Test
-//    fun `existsCustomerByEmail returns false if customer not exists`() {
-//        // given
-//        val address = Address(
-//            street = "Main Street",
-//            number = "13",
-//            zipCode = 90001,
-//            city = "Los Angeles",
-//            country = "US"
-//        )
-//        addressRepository.save(address)
-//
-//        val customer = Customer(
-//            firstName = "John",
-//            lastName = "Doe",
-//            birthdate = LocalDate.of(2001, 5, 10),
-//            email = "john.doe@mail.com",
-//            address = address,
-//            accounts = setOf(
-//                Account(
-//                    number = 12345,
-//                    balance = 200
-//                ),
-//                Account(
-//                    number = 12346,
-//                    balance = -150
-//                )
-//            )
-//        )
-//        customerRepository.save(customer)
-//
-//        // when
-//        val actual = customerRepository.existsCustomerByEmail("otherCustomer@mail.com")
-//
-//        // then
-//        assertThat(actual).isFalse
-//    }
+
+    @Test
+    fun `save Customer without saved address fails`() {
+        // given
+        val addressEntityNotPersisted = AddressEntity(EntityID(1L, AddressTable))
+
+        // when + then
+        Assertions.assertThatThrownBy {
+          CustomerEntity.new {
+                firstName = "John"
+                lastName = "Doe"
+                birthDate = LocalDate.of(2001, 5, 10)
+                email = "john.doe@mail.com"
+                addressEntity = addressEntityNotPersisted
+            }
+        }.isInstanceOf(IllegalStateException::class.java)
+
+    }
+
+    @Test
+    fun `findByFirstNameAndLastName returns matching customer`() {
+        // given
+        val addressEntityNew = AddressEntity.new {
+            street = "Main Street"
+            number = "13"
+            zipCode = 90001
+            city = "Los Angeles"
+            country = "US"
+        }
+
+        val customerEntityNew = CustomerEntity.new {
+            firstName = "John"
+            lastName = "Doe"
+            birthDate = LocalDate.of(2001, 5, 10)
+            email = "john.doe@mail.com"
+            addressEntity = addressEntityNew
+        }
+        AccountEntity.new {
+            number = 12345
+            balance = 200
+            customerEntity = customerEntityNew
+        }
+        AccountEntity.new {
+            number = 12346
+            balance = -150
+            customerEntity = customerEntityNew
+        }
+
+
+        // when
+        val actual = CustomerEntity.findByFirstNameAndLastName("John", "Doe")
+
+        // then
+        assertThat(actual).isEqualTo(customerEntityNew)
+    }
+
+    @Test
+    fun `existsCustomerByEmail returns true if customer exists`() {
+        // given
+        val addressEntityNew = AddressEntity.new {
+            street = "Main Street"
+            number = "13"
+            zipCode = 90001
+            city = "Los Angeles"
+            country = "US"
+        }
+
+        val customerEntityNew = CustomerEntity.new {
+            firstName = "John"
+            lastName = "Doe"
+            birthDate = LocalDate.of(2001, 5, 10)
+            email = "john.doe@mail.com"
+            addressEntity = addressEntityNew
+        }
+        AccountEntity.new {
+            number = 12345
+            balance = 200
+            customerEntity = customerEntityNew
+        }
+        AccountEntity.new {
+            number = 12346
+            balance = -150
+            customerEntity = customerEntityNew
+        }
+
+        // when
+        val actual = CustomerEntity.existsCustomerByEmail(customerEntityNew.email)
+
+        // then
+        assertThat(actual).isTrue
+    }
+
+    @Test
+    fun `existsCustomerByEmail returns false if customer not exists`() {
+        // given
+        val addressEntityNew = AddressEntity.new {
+            street = "Main Street"
+            number = "13"
+            zipCode = 90001
+            city = "Los Angeles"
+            country = "US"
+        }
+
+        val customerEntityNew = CustomerEntity.new {
+            firstName = "John"
+            lastName = "Doe"
+            birthDate = LocalDate.of(2001, 5, 10)
+            email = "john.doe@mail.com"
+            addressEntity = addressEntityNew
+        }
+        AccountEntity.new {
+            number = 12345
+            balance = 200
+            customerEntity = customerEntityNew
+        }
+        AccountEntity.new {
+            number = 12346
+            balance = -150
+            customerEntity = customerEntityNew
+        }
+
+        // when
+        val actual = CustomerEntity.existsCustomerByEmail("otherCustomer@mail.com")
+
+        // then
+        assertThat(actual).isFalse
+    }
 }

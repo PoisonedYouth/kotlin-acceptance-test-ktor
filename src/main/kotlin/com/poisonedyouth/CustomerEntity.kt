@@ -4,8 +4,10 @@ import org.jetbrains.exposed.dao.LongEntity
 import org.jetbrains.exposed.dao.LongEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.javatime.date
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class CustomerEntity(id: EntityID<Long>) : LongEntity(id) {
@@ -15,12 +17,21 @@ class CustomerEntity(id: EntityID<Long>) : LongEntity(id) {
         }
 
         fun deleteCustomer(customerEntity: CustomerEntity) = transaction {
-            AccountTable.deleteWhere{AccountTable.customer eq customerEntity.id}
+            AccountTable.deleteWhere { AccountTable.customer eq customerEntity.id }
             CustomerTable.deleteWhere { CustomerTable.id eq customerEntity.id }
         }
 
-        override fun new(id: Long?, init: CustomerEntity.() -> Unit): CustomerEntity = transaction{
+        override fun new(id: Long?, init: CustomerEntity.() -> Unit): CustomerEntity = transaction {
             super.new(id, init)
+        }
+
+        fun findByFirstNameAndLastName(firstName: String, lastName: String) = transaction {
+            CustomerEntity.find { (CustomerTable.firstName eq firstName) and (CustomerTable.lastName eq lastName) }
+                .singleOrNull()
+        }
+
+        fun existsCustomerByEmail(email: String) = transaction {
+            CustomerEntity.find { CustomerTable.email eq email }.singleOrNull() != null
         }
     }
 

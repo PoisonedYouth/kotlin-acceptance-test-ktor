@@ -9,31 +9,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.extension.RegisterExtension
 
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(CleanDatabaseExtension::class)
 internal class AddressEntityTest {
-
-
-    @BeforeEach
-    fun setupDatasource() {
-        val hikariConfig = HikariConfig().apply {
-            jdbcUrl = "jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"
-            driverClassName = "org.h2.Driver"
-            username = "root"
-            password = "password"
-            maximumPoolSize = 3
-            isAutoCommit = false
-            transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-            validate()
-        }
-        val database = Database.connect(HikariDataSource(hikariConfig))
-        transaction(database) {
-            SchemaUtils.drop(AddressTable)
-            SchemaUtils.create(AddressTable)
-        }
-    }
-
     @Test
     fun `save address is possible`() {
         // given + when
