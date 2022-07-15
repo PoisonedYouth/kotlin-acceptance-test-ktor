@@ -1,20 +1,19 @@
 package com.poisonedyouth
 
-import io.ktor.server.routing.*
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.response.*
-import io.ktor.server.request.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import kotlin.test.*
-import io.ktor.server.testing.*
-import com.poisonedyouth.plugins.*
+import com.poisonedyouth.plugins.configureRouting
+import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.testApplication
+import kotlin.test.assertEquals
+import org.junit.jupiter.api.Test
 
 class ApplicationTest {
     @Test
     fun testRoot() = testApplication {
         application {
+            DatabaseFactory.init()
+
             configureRouting()
         }
         client.get("/").apply {
