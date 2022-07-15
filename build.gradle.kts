@@ -33,9 +33,10 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:0.38.2")
     implementation("org.jetbrains.exposed:exposed-dao:0.38.2")
     implementation("org.jetbrains.exposed:exposed-java-time:0.38.2")
-    implementation("com.h2database:h2:2.1.214")
     implementation("io.insert-koin:koin-core:$koinVersion")
     implementation("io.insert-koin:koin-ktor:$koinVersion")
+
+    runtimeOnly("mysql:mysql-connector-java:8.0.29")
 
     runtimeOnly("org.jetbrains.exposed:exposed-jdbc:0.38.2")
 
@@ -47,6 +48,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+
+    testImplementation("org.testcontainers:junit-jupiter:1.17.2")
+    testImplementation("org.testcontainers:testcontainers:1.17.2")
+    testImplementation("org.testcontainers:mysql:1.17.2")
 
 }
 

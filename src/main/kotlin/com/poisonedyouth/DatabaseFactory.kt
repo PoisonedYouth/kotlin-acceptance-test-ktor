@@ -18,8 +18,8 @@ object DatabaseFactory {
 
     private fun hikari(): HikariDataSource {
         val config = HikariConfig()
-        config.driverClassName = "org.h2.Driver"
-        config.jdbcUrl = "jdbc:h2:file:./db"
+        config.driverClassName = "com.mysql.cj.jdbc.Driver"
+        config.jdbcUrl = "jdbc:mysql://localhost:5432/db"
         config.username = "root"
         config.password = "password"
         config.maximumPoolSize = 3
