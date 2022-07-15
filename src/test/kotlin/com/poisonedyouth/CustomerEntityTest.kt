@@ -125,7 +125,6 @@ internal class CustomerEntityTest {
                 lastName = "Customer"
                 birthDate = LocalDate.of(1984, 12, 1)
                 email = "john.doe@mail.com"
-                addressEntity = addressEntityNew
             }
 
         }.isInstanceOf(ExposedSQLException::class.java)
@@ -138,7 +137,7 @@ internal class CustomerEntityTest {
 
         // when + then
         Assertions.assertThatThrownBy {
-          CustomerEntity.new {
+            CustomerEntity.new {
                 firstName = "John"
                 lastName = "Doe"
                 birthDate = LocalDate.of(2001, 5, 10)
