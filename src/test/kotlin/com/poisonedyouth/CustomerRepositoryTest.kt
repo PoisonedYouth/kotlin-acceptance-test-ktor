@@ -28,7 +28,6 @@ class CustomerRepositoryTest : KoinTest {
     fun `createNewAddress persists new address`() {
         // given
         val address = Address(
-            id = 0,
             street = "Main Street",
             number = "13A",
             zipCode = 90001,
@@ -36,17 +35,14 @@ class CustomerRepositoryTest : KoinTest {
             country = "US"
         )
         val account1 = Account(
-            id = 0,
             number = 12345,
             balance = 200
         )
         val account2 = Account(
-            id = 0,
             number = 12346,
             balance = -150
         )
         val customer = Customer(
-            id = 0,
             firstName = "John",
             lastName = "Doe",
             birthDate = LocalDate.of(2001, 5, 10),
@@ -56,9 +52,9 @@ class CustomerRepositoryTest : KoinTest {
         )
 
         // when
-        val id = customerRepository.createNewCustomer(customer)
+        customerRepository.createNewCustomer(customer)
 
         // then
-        assertThat(customerRepository.getCustomerById(id)).isNotNull
+        assertThat(customerRepository.getCustomerById(1L)).isNotNull
     }
 }

@@ -30,6 +30,7 @@ internal class CustomerEntityTest {
             lastName = "Doe"
             birthdate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
+            customerId = 12345
             addressEntity = addressEntityNew
         }
         AccountEntity.new {
@@ -66,6 +67,7 @@ internal class CustomerEntityTest {
                 birthdate = LocalDate.of(2001, 5, 10)
                 email = "john.doe@mail.com"
                 addressEntity = addressEntityNew
+                customerId = 12345
             }
 
             val accountEntity = AccountEntity.new {
@@ -105,6 +107,7 @@ internal class CustomerEntityTest {
             lastName = "Doe"
             birthdate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
+            customerId = 12345
             addressEntity = addressEntityNew
         }
         AccountEntity.new {
@@ -125,6 +128,7 @@ internal class CustomerEntityTest {
                 lastName = "Customer"
                 birthdate = LocalDate.of(1984, 12, 1)
                 email = "john.doe@mail.com"
+                customerId = 12345
             }
 
         }.isInstanceOf(ExposedSQLException::class.java)
@@ -164,6 +168,7 @@ internal class CustomerEntityTest {
             lastName = "Doe"
             birthdate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
+            customerId = 12345
             addressEntity = addressEntityNew
         }
         AccountEntity.new {
@@ -201,6 +206,7 @@ internal class CustomerEntityTest {
             lastName = "Doe"
             birthdate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
+            customerId = 12345
             addressEntity = addressEntityNew
         }
         AccountEntity.new {
@@ -237,6 +243,7 @@ internal class CustomerEntityTest {
             lastName = "Doe"
             birthdate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
+            customerId = 12345
             addressEntity = addressEntityNew
         }
         AccountEntity.new {
