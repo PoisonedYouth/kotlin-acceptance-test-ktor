@@ -38,6 +38,7 @@ class CustomerEntity(id: EntityID<Long>) : LongEntity(id) {
     var lastName by CustomerTable.lastName
     var birthDate by CustomerTable.birthDate
     var email by CustomerTable.email
+    var customerId by CustomerTable.customerId
     var addressEntity by AddressEntity referencedOn CustomerTable.address
     val accounts by AccountEntity referrersOn AccountTable.customer
 
@@ -52,6 +53,7 @@ class CustomerEntity(id: EntityID<Long>) : LongEntity(id) {
         if (lastName != other.lastName) return false
         if (birthDate != other.birthDate) return false
         if (email != other.email) return false
+        if (customerId != other.customerId) return false
 
         return true
     }
@@ -70,6 +72,7 @@ internal object CustomerTable : LongIdTable("customer", "id") {
     val firstName = varchar("first_name", 255)
     val lastName = varchar("last_name", 255)
     val birthDate = date("birth_date")
+    val customerId = long("customer_id")
     val email = varchar("email", 255).uniqueIndex()
     val address = reference("address_id", AddressTable)
 }

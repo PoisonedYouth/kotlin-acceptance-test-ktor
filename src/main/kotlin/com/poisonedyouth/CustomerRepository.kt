@@ -1,5 +1,6 @@
 package com.poisonedyouth
 
+import kotlin.random.Random
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
 
@@ -23,6 +24,7 @@ class CustomerRepository {
             lastName = customer.lastName
             birthDate = customer.birthDate
             email = customer.email
+            customerId = customer.customerId
             addressEntity = addressEntityNew
         }
         customer.accounts.forEach {
@@ -32,7 +34,7 @@ class CustomerRepository {
                 customerEntity = customerEntityNew
             }
         }
-        customerEntityNew.id.value
+        customerEntityNew.customerId
     }
 
     fun existsCustomerByEmail(email: String) = CustomerEntity.existsCustomerByEmail(email)
@@ -75,7 +77,29 @@ data class Customer(
     val email: String,
     val address: Address,
     val accounts: Set<Account>
-)
+) {
+    val customerId: Long = createCustomerId()
+    private fun createCustomerId() = Random.nextLong(10000, 99999)
+
+    private val nameRegex = Regex("[A-Za-z]+")
+
+    init {
+        require(firstName.matches(nameRegex)) {
+            "Firstname '${firstName}' contains special characters!"
+        }
+
+        require(lastName.matches(nameRegex)) {
+            "Lastname '${lastName}' contains special characters!"
+        }
+
+        val now = LocalDate.now()
+        require(
+            birthDate.isBefore(now.minusYears(18)) && birthDate.isAfter(now.minusYears(100))
+        ) {
+            "Age must be between 18 and 100!"
+        }
+    }
+}
 
 data class Account(
     var id: Long? = null,
