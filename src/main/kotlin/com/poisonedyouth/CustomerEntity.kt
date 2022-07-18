@@ -36,7 +36,7 @@ class CustomerEntity(id: EntityID<Long>) : LongEntity(id) {
 
     var firstName by CustomerTable.firstName
     var lastName by CustomerTable.lastName
-    var birthDate by CustomerTable.birthDate
+    var birthdate by CustomerTable.birthdate
     var email by CustomerTable.email
     var customerId by CustomerTable.customerId
     var addressEntity by AddressEntity referencedOn CustomerTable.address
@@ -51,7 +51,7 @@ class CustomerEntity(id: EntityID<Long>) : LongEntity(id) {
         if (id != other.id) return false
         if (firstName != other.firstName) return false
         if (lastName != other.lastName) return false
-        if (birthDate != other.birthDate) return false
+        if (birthdate != other.birthdate) return false
         if (email != other.email) return false
         if (customerId != other.customerId) return false
 
@@ -62,7 +62,7 @@ class CustomerEntity(id: EntityID<Long>) : LongEntity(id) {
         var result = firstName.hashCode()
         result = 31 * result + id.hashCode()
         result = 31 * result + lastName.hashCode()
-        result = 31 * result + birthDate.hashCode()
+        result = 31 * result + birthdate.hashCode()
         result = 31 * result + email.hashCode()
         return result
     }
@@ -71,7 +71,7 @@ class CustomerEntity(id: EntityID<Long>) : LongEntity(id) {
 internal object CustomerTable : LongIdTable("customer", "id") {
     val firstName = varchar("first_name", 255)
     val lastName = varchar("last_name", 255)
-    val birthDate = date("birth_date")
+    val birthdate = date("birth_date")
     val customerId = long("customer_id")
     val email = varchar("email", 255).uniqueIndex()
     val address = reference("address_id", AddressTable)

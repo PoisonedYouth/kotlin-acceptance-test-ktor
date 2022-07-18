@@ -28,7 +28,7 @@ internal class CustomerEntityTest {
         val customerEntityNew = CustomerEntity.new {
             firstName = "John"
             lastName = "Doe"
-            birthDate = LocalDate.of(2001, 5, 10)
+            birthdate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
             addressEntity = addressEntityNew
         }
@@ -63,7 +63,7 @@ internal class CustomerEntityTest {
             val customerEntityNew = CustomerEntity.new {
                 firstName = "John"
                 lastName = "Doe"
-                birthDate = LocalDate.of(2001, 5, 10)
+                birthdate = LocalDate.of(2001, 5, 10)
                 email = "john.doe@mail.com"
                 addressEntity = addressEntityNew
             }
@@ -103,7 +103,7 @@ internal class CustomerEntityTest {
         val customerEntityNew = CustomerEntity.new {
             firstName = "John"
             lastName = "Doe"
-            birthDate = LocalDate.of(2001, 5, 10)
+            birthdate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
             addressEntity = addressEntityNew
         }
@@ -123,7 +123,7 @@ internal class CustomerEntityTest {
             CustomerEntity.new {
                 firstName = "Duplicate"
                 lastName = "Customer"
-                birthDate = LocalDate.of(1984, 12, 1)
+                birthdate = LocalDate.of(1984, 12, 1)
                 email = "john.doe@mail.com"
             }
 
@@ -140,7 +140,7 @@ internal class CustomerEntityTest {
             CustomerEntity.new {
                 firstName = "John"
                 lastName = "Doe"
-                birthDate = LocalDate.of(2001, 5, 10)
+                birthdate = LocalDate.of(2001, 5, 10)
                 email = "john.doe@mail.com"
                 addressEntity = addressEntityNotPersisted
             }
@@ -162,7 +162,7 @@ internal class CustomerEntityTest {
         val customerEntityNew = CustomerEntity.new {
             firstName = "John"
             lastName = "Doe"
-            birthDate = LocalDate.of(2001, 5, 10)
+            birthdate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
             addressEntity = addressEntityNew
         }
@@ -199,7 +199,7 @@ internal class CustomerEntityTest {
         val customerEntityNew = CustomerEntity.new {
             firstName = "John"
             lastName = "Doe"
-            birthDate = LocalDate.of(2001, 5, 10)
+            birthdate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
             addressEntity = addressEntityNew
         }
@@ -235,7 +235,7 @@ internal class CustomerEntityTest {
         val customerEntityNew = CustomerEntity.new {
             firstName = "John"
             lastName = "Doe"
-            birthDate = LocalDate.of(2001, 5, 10)
+            birthdate = LocalDate.of(2001, 5, 10)
             email = "john.doe@mail.com"
             addressEntity = addressEntityNew
         }

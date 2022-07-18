@@ -22,7 +22,7 @@ class CustomerRepository {
         val customerEntityNew = CustomerEntity.new {
             firstName = customer.firstName
             lastName = customer.lastName
-            birthDate = customer.birthDate
+            birthdate = customer.birthDate
             email = customer.email
             customerId = customer.customerId
             addressEntity = addressEntityNew
@@ -45,7 +45,7 @@ class CustomerRepository {
                 id = customerEntity.id.value,
                 firstName = customerEntity.firstName,
                 lastName = customerEntity.lastName,
-                birthDate = customerEntity.birthDate,
+                birthDate = customerEntity.birthdate,
                 email = customerEntity.email,
                 address = customerEntity.addressEntity.let {
                     Address(
