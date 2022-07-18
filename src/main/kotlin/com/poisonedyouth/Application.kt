@@ -1,8 +1,9 @@
 package com.poisonedyouth
 
+import com.poisonedyouth.plugins.configureRouting
+import com.poisonedyouth.plugins.installContentNegotiation
 import com.poisonedyouth.plugins.installKoin
-import io.ktor.server.application.*
-import com.poisonedyouth.plugins.*
+import io.ktor.server.application.Application
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
@@ -12,6 +13,6 @@ fun Application.module() {
     DatabaseFactory.init()
 
     installKoin()
-
+    installContentNegotiation()
     configureRouting()
 }

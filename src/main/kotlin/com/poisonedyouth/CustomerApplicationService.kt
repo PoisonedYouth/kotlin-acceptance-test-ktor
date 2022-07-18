@@ -15,7 +15,7 @@ class CustomerApplicationService(
 ) {
 
 
-    fun addNewCustomer(customerDto: CustomerDto): ApiResult<Any> {
+    fun addNewCustomer(customerDto: CustomerDto): ApiResult<Long> {
         try {
             val customer = mapCustomerDtoToCustomer(customerDto)
 
